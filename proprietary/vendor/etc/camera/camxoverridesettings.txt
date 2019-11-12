@@ -1,0 +1,9 @@
+logWarningMask=0
+logInfoMask=0x0
+logVerboseMask=0x0
+overrideLogLevels=0x1
+multiCameraEnable=TRUE
+enableSensorHWSync=TRUE
+enableSensorFpsMatch=TRUE
+enableOISOptimization=TRUE
+disableFocusIndication=1

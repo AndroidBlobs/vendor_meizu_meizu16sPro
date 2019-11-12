@@ -1,0 +1,49 @@
+# Author : zhangyaping@meizu.com
+@ Function : Doing compatibility bettwen AB and Non-AB
+
+#{@ Below configration come from hardware/interfaces/boot/1.0/default/android.hardware.boot@1.0-service.rc
+#In non-AB systemm, below configration must be commented
+#service vendor.boot-hal-1-0 /vendor/bin/hw/android.hardware.boot@1.0-service
+#    class early_hal
+#    user root
+#    group root
+#@}
+
+#{@ Below configration come from /system/core/rootdir/init.rc
+# It is recommended to put unnecessary data/ initialization from post-fs-data
+# to start-zygote in device's init.rc to unblock zygote start.
+on zygote-start && property:ro.crypto.state=unencrypted
+	# A/B update verifier that marks a successful boot.
+	#exec_start update_verifier_nonencrypted
+	start netd
+	start zygote
+	start zygote_secondary
+
+on zygote-start && property:ro.crypto.state=unsupported
+	# A/B update verifier that marks a successful boot.
+	#exec_start update_verifier_nonencrypted
+	start netd
+	start zygote
+	start zygote_secondary
+
+on zygote-start && property:ro.crypto.state=encrypted && property:ro.crypto.type=file
+	# A/B update verifier that marks a successful boot.
+	#exec_start update_verifier_nonencrypted
+	start netd
+	start zygote
+	start zygote_secondary
+
+on property:vold.decrypt=trigger_restart_min_framework
+	# A/B update verifier that marks a successful boot.
+  	#exec_start update_verifier
+	class_start main
+
+on property:vold.decrypt=trigger_restart_framework
+	stop surfaceflinger
+	start surfaceflinger
+	# A/B update verifier that marks a successful boot.
+    #exec_start update_verifier
+	class_start main
+	class_start late_start
+#@}
+

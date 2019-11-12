@@ -1,0 +1,7 @@
+service edatasrv /vendor/bin/hw/vendor.caih.hardware.edata@1.0-service
+    class hal
+    user system
+    group system
+
+on property:vendor.start_edatasrv=1
+    start edatasrv
